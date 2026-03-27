@@ -1,6 +1,32 @@
 # tiktok-dl
 
-Cross-platform CLI for downloading TikTok videos and images — runs on **Windows**, **macOS**, and **Linux**.
+Cross-platform CLI for downloading TikTok videos and images — runs on **Windows**, **macOS**, and **Linux** with no runtime required.
+
+---
+
+## Installation
+
+Download the latest binary for your platform from the [Releases](../../releases/latest) page:
+
+| Platform         | File                          |
+| ---------------- | ----------------------------- |
+| macOS (Apple Silicon) | `tiktok-dl-osx-arm64.tar.gz` |
+| macOS (Intel)    | `tiktok-dl-osx-x64.tar.gz`   |
+| Linux (x64)      | `tiktok-dl-linux-x64.tar.gz` |
+| Windows (x64)    | `tiktok-dl-win-x64.zip`       |
+
+Extract the archive and place the binary somewhere on your `PATH`.
+
+**macOS / Linux:**
+```bash
+tar -xzf tiktok-dl-osx-arm64.tar.gz
+chmod +x tiktok-dl
+sudo mv tiktok-dl /usr/local/bin/
+```
+
+**Windows:** extract the zip and add the folder to your `PATH` via System Settings, or run it directly.
+
+> **First run of `download-user`:** Chromium is required for profile scraping and will be downloaded automatically on first use (~150 MB).
 
 ---
 
@@ -10,63 +36,7 @@ Cross-platform CLI for downloading TikTok videos and images — runs on **Window
 - Batch download from a text file of links
 - Scrape and download all posts from a user's profile
 - Resume interrupted downloads automatically
-- Progress output to the terminal via [Spectre.Console](https://spectreconsole.net/)
-- Clean Architecture core library (`TikTokDl.Core`) — usable independently
-
----
-
-## Prerequisites
-
-| Requirement                                                        | Version                           |
-| ------------------------------------------------------------------ | --------------------------------- |
-| [.NET SDK](https://dotnet.microsoft.com/download/dotnet/10.0)      | 10.0+                             |
-| [Playwright browsers](https://playwright.dev/dotnet/docs/browsers) | Required for `download-user` only |
-
-Install Playwright's bundled Chromium (needed for `download-user`):
-
-```bash
-dotnet tool install --global Microsoft.Playwright.CLI
-playwright install chromium
-```
-
----
-
-## Build
-
-```bash
-# Clone the repo
-git clone https://github.com/Jettcodey/tiktok-dl.git
-cd tiktok-dl
-
-# Build all projects
-dotnet build tiktok-dl.slnx
-
-# Run tests
-dotnet test tiktok-dl.slnxx
-
-# Run the CLI directly (without installing)
-dotnet run --project TikTokDl.CLI -- download <url>
-```
-
-### Self-Contained Publish
-
-Produce a single executable with no runtime dependency:
-
-```bash
-# Linux (x64)
-dotnet publish TikTokDl.CLI/TikTokDl.CLI.csproj -r linux-x64 -p:SelfContained=true -c Release -o ./publish/linux-x64
-
-# macOS (arm64 — Apple Silicon)
-dotnet publish TikTokDl.CLI/TikTokDl.CLI.csproj -r osx-arm64 -p:SelfContained=true -c Release -o ./publish/osx-arm64
-
-# macOS (x64 — Intel)
-dotnet publish TikTokDl.CLI/TikTokDl.CLI.csproj -r osx-x64 -p:SelfContained=true -c Release -o ./publish/osx-x64
-
-# Windows (x64)
-dotnet publish TikTokDl.CLI/TikTokDl.CLI.csproj -r win-x64 -p:SelfContained=true -c Release -o ./publish/win-x64
-```
-
-Add the output folder to your `PATH` to use `tiktok-dl` from anywhere.
+- No watermark by default (SD mode)
 
 ---
 
@@ -76,25 +46,23 @@ Add the output folder to your `PATH` to use `tiktok-dl` from anywhere.
 tiktok-dl <command> [options]
 ```
 
-### Commands
-
-#### `download` — Single video or image post
+### `download` — Single video or image post
 
 ```
 tiktok-dl download <url> [options]
 ```
 
-| Option               | Description                                             |
-| -------------------- | ------------------------------------------------------- |
-| `--hd`               | Download in HD quality via tikwm.com                    |
-| `--watermark`        | Include watermark (SD only; not always available)       |
-| `--avatar`           | Also download the poster's profile avatar               |
+| Option               | Description                                               |
+| -------------------- | --------------------------------------------------------- |
+| `--hd`               | Download in HD quality via tikwm.com                      |
+| `--watermark`        | Include watermark (SD only; not always available)         |
+| `--avatar`           | Also download the poster's profile avatar                 |
 | `-o, --output <dir>` | Output directory (default: `~/Downloads/TikTokDownloads`) |
 
 **Examples:**
 
 ```bash
-# Standard download
+# Standard SD download
 tiktok-dl download https://www.tiktok.com/@user/video/1234567890
 
 # HD download
@@ -109,19 +77,19 @@ tiktok-dl download https://www.tiktok.com/@user/photo/9876543210 -o ~/Downloads/
 
 ---
 
-#### `download-user` — All posts from a user's profile
+### `download-user` — All posts from a user's profile
 
 ```
 tiktok-dl download-user <username> [options]
 ```
 
-| Option               | Description                                             |
-| -------------------- | ------------------------------------------------------- |
-| `--hd`               | Download in HD quality                                  |
+| Option               | Description                                               |
+| -------------------- | --------------------------------------------------------- |
+| `--hd`               | Download in HD quality                                    |
 | `-o, --output <dir>` | Output directory (default: `~/Downloads/TikTokDownloads`) |
-| `--browser <path>`   | Path to a custom browser executable for Playwright      |
+| `--browser <path>`   | Path to a custom Chromium executable                      |
 
-> Opens a browser window to scroll through the profile and collect links. You may need to solve a CAPTCHA or dismiss a cookie banner on first run.
+Opens a browser window to scroll through the profile and collect all post links. You may need to solve a CAPTCHA or dismiss a cookie banner on first run.
 
 **Examples:**
 
@@ -132,15 +100,15 @@ tiktok-dl download-user @username --hd -o ~/Videos/tiktok
 
 ---
 
-#### `download-file` — Batch download from a text file
+### `download-file` — Batch download from a text file
 
 ```
 tiktok-dl download-file <file.txt> [options]
 ```
 
-| Option               | Description                                             |
-| -------------------- | ------------------------------------------------------- |
-| `--hd`               | Download in HD quality                                  |
+| Option               | Description                                               |
+| -------------------- | --------------------------------------------------------- |
+| `--hd`               | Download in HD quality                                    |
 | `-o, --output <dir>` | Output directory (default: `~/Downloads/TikTokDownloads`) |
 
 The text file should contain one TikTok URL per line:
@@ -167,15 +135,15 @@ Downloads are organised automatically:
 <output-dir>/
 └── @username/
     ├── Videos/
-    │   └── video_<id>.mp4
+    │   └── <media-id>.mp4          # or <media-id>_HD.mp4 / <media-id>_Watermark.mp4
     ├── Images/
-    │   ├── image_<id>_1.jpeg
-    │   └── image_<id>_2.jpeg
+    │   ├── <media-id>_1.jpeg
+    │   └── <media-id>_2.jpeg
     └── Avatars/
         └── avatar_<username>.jpeg
 ```
 
-An index file (`downloaded_<username>.txt`) is maintained per user to skip already-downloaded posts when re-running.
+An index file (`<username>_index.txt`) is maintained per user so already-downloaded posts are skipped when re-running.
 
 ---
 
@@ -184,41 +152,9 @@ An index file (`downloaded_<username>.txt`) is maintained per user to skip alrea
 | Mode           | API Used                           | Notes                                             |
 | -------------- | ---------------------------------- | ------------------------------------------------- |
 | SD video       | `api22-normal-c-alisg.tiktokv.com` | May be unreliable after recent TikTok API changes |
-| HD video       | `tikwm.com` (submit + poll)        | More reliable; requires two API calls             |
+| HD video       | `tikwm.com` (submit + poll)        | More reliable; 5,000 requests/day limit           |
 | HD images      | `tikwm.com/api/`                   | Single GET request                                |
 | Profile scrape | Playwright (Chromium)              | Required for `download-user`                      |
-
----
-
-## Project Structure
-
-```
-tiktok-dl/
-├── tiktok-dl.slnx
-├── TikTokDl.Core/                  # Platform-agnostic business logic
-│   ├── Domain/
-│   │   ├── Common/Result.cs        # Result<T> error handling
-│   │   └── Models/                 # VideoData, DownloadOptions
-│   ├── Application/
-│   │   ├── Interfaces/             # IMediaApiService, IHdApiService, ...
-│   │   └── UseCases/               # DownloadSingle, DownloadFromFile, DownloadByUsername
-│   └── Infrastructure/
-│       └── Services/               # TikTokApiService, TikWmApiService, FileDownloadService, ...
-├── TikTokDl.CLI/                   # CLI entry point
-│   ├── Commands/                   # download, download-user, download-file
-│   ├── CliProgress.cs              # Spectre.Console progress reporter
-│   └── Program.cs                  # DI setup + command registration
-├── TikTokDl.Tests/                 # xUnit tests
-└── NuGet.config                    # Scoped NuGet source (nuget.org only)
-```
-
----
-
-## Running Tests
-
-```bash
-dotnet test tiktok-dl.slnx
-```
 
 ---
 
@@ -226,8 +162,6 @@ dotnet test tiktok-dl.slnx
 
 This project is a C# reimplementation based on the original work by [Jettcodey](https://github.com/Jettcodey):
 [https://github.com/Jettcodey/TikTok-Downloader](https://github.com/Jettcodey/TikTok-Downloader)
-
-This repository was generated with AI assistance.
 
 ---
 
