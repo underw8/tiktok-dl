@@ -37,7 +37,31 @@ public class PlaywrightBrowserService : IBrowserService
         string profileUrl = $"https://www.tiktok.com/@{username}";
         _logger.LogInformation("Launching browser to scrape @{Username}", username);
 
-        using var playwright = await Playwright.CreateAsync();
+        // Single-file publish sets Assembly.Location to "" which causes Playwright's driver
+        // locator to NullReferenceException. Set PLAYWRIGHT_DRIVER_PATH to AppContext.BaseDirectory
+        // so Playwright finds the driver next to the executable.
+        if (string.IsNullOrEmpty(typeof(IPlaywright).Assembly.Location))
+        {
+            var driverName = OperatingSystem.IsWindows() ? "playwright.cmd" : "playwright.sh";
+            var driverPath = Path.Combine(AppContext.BaseDirectory, driverName);
+            Environment.SetEnvironmentVariable("PLAYWRIGHT_DRIVER_PATH", driverPath);
+            _logger.LogDebug("Single-file mode: set PLAYWRIGHT_DRIVER_PATH={Path}", driverPath);
+        }
+
+        IPlaywright playwright;
+        try
+        {
+            playwright = await Playwright.CreateAsync();
+        }
+        catch (Exception ex) when (ex is NullReferenceException or InvalidOperationException)
+        {
+            return Result<string[]>.Failure(
+                "Playwright failed to initialize — this binary was built as a single-file executable " +
+                "which is incompatible with Playwright's driver locator.\n" +
+                "Use a build without PublishSingleFile=true, or build from source:\n" +
+                "  dotnet run --project TikTokDl.CLI -- download-user <username>");
+        }
+
         var browserType = ResolveBrowserType(playwright, _customBrowserPath);
 
         var launchOptions = new BrowserTypeLaunchOptions

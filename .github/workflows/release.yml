@@ -43,17 +43,16 @@ jobs:
           -r ${{ matrix.rid }}
           -c Release
           -p:SelfContained=true
-          -p:PublishSingleFile=true
           -o ./publish/${{ matrix.rid }}
 
       - name: Archive (tar)
         if: matrix.archive == 'tar'
-        run: tar -czf tiktok-dl-${{ matrix.rid }}.tar.gz -C ./publish/${{ matrix.rid }} tiktok-dl
+        run: tar -czf tiktok-dl-${{ matrix.rid }}.tar.gz -C ./publish/${{ matrix.rid }} .
 
       - name: Archive (zip)
         if: matrix.archive == 'zip'
         shell: pwsh
-        run: Compress-Archive -Path ./publish/${{ matrix.rid }}/tiktok-dl.exe -DestinationPath tiktok-dl-${{ matrix.rid }}.zip
+        run: Compress-Archive -Path ./publish/${{ matrix.rid }}/* -DestinationPath tiktok-dl-${{ matrix.rid }}.zip
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

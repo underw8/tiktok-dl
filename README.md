@@ -19,12 +19,13 @@ Extract the archive and place the binary somewhere on your `PATH`.
 
 **macOS / Linux:**
 ```bash
-tar -xzf tiktok-dl-osx-arm64.tar.gz
-chmod +x tiktok-dl
-sudo mv tiktok-dl /usr/local/bin/
+mkdir tiktok-dl && tar -xzf tiktok-dl-osx-arm64.tar.gz -C tiktok-dl
+chmod +x tiktok-dl/tiktok-dl
+sudo mv tiktok-dl /usr/local/lib/
+sudo ln -s /usr/local/lib/tiktok-dl/tiktok-dl /usr/local/bin/tiktok-dl
 ```
 
-**Windows:** extract the zip and add the folder to your `PATH` via System Settings, or run it directly.
+**Windows:** extract the zip folder and add it to your `PATH` via System Settings, or run `tiktok-dl.exe` directly from that folder.
 
 > **First run of `download-user`:** Chromium is required for profile scraping and will be downloaded automatically on first use (~150 MB).
 
