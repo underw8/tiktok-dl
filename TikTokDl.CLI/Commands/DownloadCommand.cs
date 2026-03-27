@@ -18,7 +18,7 @@ public static class DownloadCommand
 
         var hdOption = new Option<bool>("--hd", "Download in HD quality (via tikwm.com)");
         var watermarkOption = new Option<bool>("--watermark", "Include watermark (SD only)");
-        var outputOption = new Option<string?>("--output", "Output directory (default: ~/Desktop/TiktokDownloads)");
+        var outputOption = new Option<string?>("--output", "Output directory (default: ~/Downloads/TikTokDownloads)");
         outputOption.AddAlias("-o");
 
         var cmd = new Command("download", "Download a single TikTok video or image post")

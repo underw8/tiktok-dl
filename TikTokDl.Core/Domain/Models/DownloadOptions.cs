@@ -20,8 +20,9 @@ public record DownloadOptions(
         EnableJsonLogs: false,
         EnableDownloadLogs: true,
         OutputDirectory: Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-            "TiktokDownloads"),
+            Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+            "Downloads",
+            "TikTokDownloads"),
         CustomBrowserPath: null
     );
 }

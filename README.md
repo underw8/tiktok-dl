@@ -89,7 +89,7 @@ tiktok-dl download <url> [options]
 | `--hd`               | Download in HD quality via tikwm.com                    |
 | `--watermark`        | Include watermark (SD only; not always available)       |
 | `--avatar`           | Also download the poster's profile avatar               |
-| `-o, --output <dir>` | Output directory (default: `~/Desktop/TikTokDownloads`) |
+| `-o, --output <dir>` | Output directory (default: `~/Downloads/TikTokDownloads`) |
 
 **Examples:**
 
@@ -118,7 +118,7 @@ tiktok-dl download-user <username> [options]
 | Option               | Description                                             |
 | -------------------- | ------------------------------------------------------- |
 | `--hd`               | Download in HD quality                                  |
-| `-o, --output <dir>` | Output directory (default: `~/Desktop/TikTokDownloads`) |
+| `-o, --output <dir>` | Output directory (default: `~/Downloads/TikTokDownloads`) |
 | `--browser <path>`   | Path to a custom browser executable for Playwright      |
 
 > Opens a browser window to scroll through the profile and collect links. You may need to solve a CAPTCHA or dismiss a cookie banner on first run.
@@ -141,7 +141,7 @@ tiktok-dl download-file <file.txt> [options]
 | Option               | Description                                             |
 | -------------------- | ------------------------------------------------------- |
 | `--hd`               | Download in HD quality                                  |
-| `-o, --output <dir>` | Output directory (default: `~/Desktop/TikTokDownloads`) |
+| `-o, --output <dir>` | Output directory (default: `~/Downloads/TikTokDownloads`) |
 
 The text file should contain one TikTok URL per line:
 
